@@ -21,6 +21,8 @@ function App() {
     start: 0,
     end: showPerPage,
   });
+  const [openModal,setOpenModal] = useState(false)
+  const [modalShow, setModalShow] = useState(false);
   
   const fetchPosts = async() => {
     const response = await Axios.get(' https://api.mediastack.com/v1/news?access_key=985f363243c57c561b4a248d13962cc9&countries=in&limit=30&offset=2')
