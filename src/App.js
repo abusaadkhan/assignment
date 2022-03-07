@@ -13,87 +13,37 @@ import Sidebar from './components/Sidebar'
 
 function App() {
  const [posts,setPosts] = useState([])
-  const [layout,setLayout] = useState('grid')
-  const[containerBlur,setContainerBlur] = useState('containerBlur')
-  const [showPerPage, setShowPerPage] = useState(6);
-  const [pagination, setPagination] = useState({
-    start: 0,
-    end: showPerPage,
-  });
-  const [openModal,setOpenModal] = useState(false)
-  const [modalShow, setModalShow] = useState(false);
 
-  const onPaginationChange = (start, end) => {
-    setPagination({ start: start, end: end });
-  };
+
+ 
   
   const fetchPosts = async() => {
-    const response = await Axios.get(' https://jsonplaceholder.typicode.com/posts')
-    setPosts(response.data)
+    const {data} = await Axios.get(' http://api.mediastack.com/v1/news?access_key=985f363243c57c561b4a248d13962cc9&countries=in&limit=30&offset=2')
+    setPosts(data.data)
+    console.log('response frpm mediastack:',data)
    }
-  const deletePost = (id) =>{
-    setPosts(posts.filter(detail => detail.id!==id ))
-  }
-  const changeLayout = () =>{
-    setLayout(layout==='grid'? 'list' : 'grid')
-    /*setShowPerPage(layout==='grid'? 10 : 5)*/
-    console.log('set show per page:', showPerPage)
-  }
-  const changeContainerBlur = () =>{
-    setContainerBlur(openModal? 'containerBlur' : '')
-  }
+
 
   useEffect(() => {
     fetchPosts()
   }, [])
-  useEffect(() => {
-    changeContainerBlur()
-  }, [openModal])
+
 
   return (
     <>
-    <div className="App">
-    {openModal? (<Modal/>) : (<Sidebar setOpenModal={setOpenModal} changeLayout={changeLayout} />)}
-        <MyVerticallyCenteredModal
-        show={modalShow}
-        onHide={() => setModalShow(false)}
-      />
-      <div>
-      <div className={containerBlur} >
-      <div className="container containerNew "  onClick={()=>setOpenModal(false)}>
-      <div className={layout} >
-      
-        {posts.slice(pagination.start, pagination.end).map((post) => (
-          <div className="cardDiv mb-3" 
-               key={post.id} 
-               >
-               <Card onClick={()=>setModalShow(true)} className='newsCard' >
-               <Card.Body>
-                   <Card.Title>
-                       <h2>{post.title}</h2>
-                   </Card.Title>
-                   <Card.Text>
-                       {post.body}
-                   </Card.Text>
-               </Card.Body>
-             </Card>
-             <span className="newsCardBtn" onClick={()=> deletePost(post.id) } >	&#10007;</span>
-          </div>
-        ))}
-      
-        </div>
-      <Pagination
-        showPerPage={showPerPage}
-        onPaginationChange={onPaginationChange}
-        total={posts.length}
-      />
-    
-    </div>
-    </div>
-      </div>
-   
-      
-    </div>
+    {posts.map((post,index)=>(
+      <Card id='card' >
+      <Card.Img id="cardImage" variant="top" src={post.image}/>
+      <Card.Body>
+        <Card.Title>{post.title}</Card.Title>
+        <Card.Text>
+          {post.description}
+        </Card.Text>
+        {post.author} {post.source}<br/>
+        <a href={post.url}>Read full news</a>
+      </Card.Body>
+    </Card>
+    ))}
     </>
   );
 }
