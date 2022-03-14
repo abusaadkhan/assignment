@@ -11,11 +11,10 @@ import Sidebar from './components/Sidebar'
 
 
 
-function App() {
+function AppTemp2() {
  const [posts,setPosts] = useState([])
   const [layout,setLayout] = useState('grid')
   const[containerBlur,setContainerBlur] = useState('containerBlur')
-
   const [showPerPage, setShowPerPage] = useState(6);
   const [pagination, setPagination] = useState({
     start: 0,
@@ -23,17 +22,27 @@ function App() {
   });
   const [openModal,setOpenModal] = useState(false)
   const [modalShow, setModalShow] = useState(false);
-  
-  const fetchPosts = async() => {
-    const response = await Axios.get(' https://api.mediastack.com/v1/news?access_key=985f363243c57c561b4a248d13962cc9&countries=in&limit=30&offset=2')
-    setPosts(response.data.data)
-    console.log('data stored in post:',posts)
-   }
 
-   const onPaginationChange = (start, end) => {
+  const onPaginationChange = (start, end) => {
     setPagination({ start: start, end: end });
   };
+ /* 
+  const fetchPosts = async() => {
+    const response = await Axios.get(' https://jsonplaceholder.typicode.com/posts')
+    setPosts(response.data)
+   }*/
 
+   const fetchPosts = async() => {
+    const res = await Axios.get(' https://newsapi.org/v2/top-headlines?country=us&apiKey=e9c7984a93e941e19db81ffd6148bee9')
+    
+    console.log('response frpm mediastack:',res.data.articles)
+    setPosts(res.data.articles)
+    console.log('response frpm usestate post:',posts)
+   }
+
+  const deletePost = (id) =>{
+    setPosts(posts.filter(detail => detail.id!==id ))
+  }
   const changeLayout = () =>{
     setLayout(layout==='grid'? 'list' : 'grid')
     /*setShowPerPage(layout==='grid'? 10 : 5)*/
@@ -56,7 +65,6 @@ function App() {
     {openModal? (<Modal/>) : (<Sidebar setOpenModal={setOpenModal} changeLayout={changeLayout} />)}
         <MyVerticallyCenteredModal
         show={modalShow}
-
         onHide={() => setModalShow(false)}
       />
       <div>
@@ -64,27 +72,26 @@ function App() {
       <div className="container containerNew "  onClick={()=>setOpenModal(false)}>
       <div className={layout} >
       
-        {posts.map((post,index) => (
+        {posts.slice(pagination.start, pagination.end).map((post) => (
           <div className="cardDiv mb-3" 
-               key={post.index} 
+               key={post.id} 
                >
                <Card onClick={()=>setModalShow(true)} className='newsCard' >
-               <Card.Img id="cardImage" variant="top" src={post.image}/>
                <Card.Body>
-                 <Card.Title>{post.title}</Card.Title>
-                 <Card.Text>
-                   {post.description}
-                 </Card.Text>
-                 {post.author} {post.source}<br/>
-                 <a href={post.url}>Read full news</a>
+                   <Card.Title>
+                       <h2>{post.title}</h2>
+                   </Card.Title>
+                   <Card.Text>
+                       {post.body}
+                   </Card.Text>
                </Card.Body>
-               </Card>
-             
+             </Card>
+             <span className="newsCardBtn" onClick={()=> deletePost(post.id) } >	&#10007;</span>
           </div>
         ))}
       
         </div>
-        <Pagination
+      <Pagination
         showPerPage={showPerPage}
         onPaginationChange={onPaginationChange}
         total={posts.length}
@@ -100,4 +107,4 @@ function App() {
   );
 }
 
-export default App;
+export default AppTemp2;

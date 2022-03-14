@@ -15,12 +15,14 @@ function App() {
  const [posts,setPosts] = useState([])
 
 
- 
+ /*http://api.mediastack.com/v1/news?access_key=985f363243c57c561b4a248d13962cc9&countries=in&limit=30&offset=2*/ 
   
   const fetchPosts = async() => {
-    const {data} = await Axios.get(' http://api.mediastack.com/v1/news?access_key=985f363243c57c561b4a248d13962cc9&countries=in&limit=30&offset=2')
-    setPosts(data.data)
-    console.log('response frpm mediastack:',data)
+    const res = await Axios.get(' https://newsapi.org/v2/top-headlines?country=us&apiKey=e9c7984a93e941e19db81ffd6148bee9')
+    
+    console.log('response frpm mediastack:',res.data.articles)
+    setPosts(res.data.articles)
+    console.log('response frpm usestate post:',posts)
    }
 
 
@@ -28,18 +30,19 @@ function App() {
     fetchPosts()
   }, [])
 
+  console.log('response frpm usestate post:',posts)
 
   return (
     <>
     {posts.map((post,index)=>(
       <Card id='card' >
-      <Card.Img id="cardImage" variant="top" src={post.image}/>
+      <Card.Img id="cardImage" variant="top" src={post.urlToImage}/>
       <Card.Body>
         <Card.Title>{post.title}</Card.Title>
         <Card.Text>
           {post.description}
         </Card.Text>
-        {post.author} {post.source}<br/>
+        {post.author} {post.source.id}<br/>
         <a href={post.url}>Read full news</a>
       </Card.Body>
     </Card>

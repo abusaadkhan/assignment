@@ -11,7 +11,7 @@ import Sidebar from './components/Sidebar'
 
 
 
-function App() {
+function AppTemp2() {
  const [posts,setPosts] = useState([])
   const [layout,setLayout] = useState('grid')
   const[containerBlur,setContainerBlur] = useState('containerBlur')
@@ -26,11 +26,20 @@ function App() {
   const onPaginationChange = (start, end) => {
     setPagination({ start: start, end: end });
   };
-  
+ /* 
   const fetchPosts = async() => {
     const response = await Axios.get(' https://jsonplaceholder.typicode.com/posts')
     setPosts(response.data)
+   }*/
+
+   const fetchPosts = async() => {
+    const res = await Axios.get(' https://newsapi.org/v2/top-headlines?country=us&apiKey=e9c7984a93e941e19db81ffd6148bee9')
+    
+    console.log('response frpm mediastack:',res.data.articles)
+    setPosts(res.data.articles)
+    console.log('response frpm usestate post:',posts)
    }
+
   const deletePost = (id) =>{
     setPosts(posts.filter(detail => detail.id!==id ))
   }
@@ -63,21 +72,24 @@ function App() {
       <div className="container containerNew "  onClick={()=>setOpenModal(false)}>
       <div className={layout} >
       
-        {posts.slice(pagination.start, pagination.end).map((post) => (
+        {posts.map((post,index) => (
           <div className="cardDiv mb-3" 
-               key={post.id} 
+               key={post.index} 
                >
-               <Card onClick={()=>setModalShow(true)} className='newsCard' >
+               <Card id="card" onClick={()=>setModalShow(true)} className='newsCard' >
+               <Card.Img id="cardImage" variant="top" src={post.urlToImage}/>
                <Card.Body>
                    <Card.Title>
-                       <h2>{post.title}</h2>
+                       {post.title}
                    </Card.Title>
                    <Card.Text>
-                       {post.body}
+                       {post.description}
                    </Card.Text>
+                   {post.author} {post.source.id}<br/>
+                   <a href={post.url}>Read full news</a>
                </Card.Body>
              </Card>
-             <span className="newsCardBtn" onClick={()=> deletePost(post.id) } >	&#10007;</span>
+            
           </div>
         ))}
       
@@ -98,4 +110,4 @@ function App() {
   );
 }
 
-export default App;
+export default AppTemp2;

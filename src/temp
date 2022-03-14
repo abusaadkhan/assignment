@@ -1,0 +1,13 @@
+{posts.map((post,index)=>(
+  <Card id='card' >
+  <Card.Img id="cardImage" variant="top" src={post.image}/>
+  <Card.Body>
+    <Card.Title>{post.source.title}</Card.Title>
+    <Card.Text>
+      {post.description}
+    </Card.Text>
+    {post.author} {post.source}<br/>
+    <a href={post.url}>Read full news</a>
+  </Card.Body>
+</Card>
+))}
