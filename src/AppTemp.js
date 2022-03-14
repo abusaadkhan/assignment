@@ -26,12 +26,12 @@ function AppTemp2() {
   const onPaginationChange = (start, end) => {
     setPagination({ start: start, end: end });
   };
- /* 
+ 
   const fetchPosts = async() => {
     const response = await Axios.get(' https://jsonplaceholder.typicode.com/posts')
     setPosts(response.data)
-   }*/
-
+   }
+   /*
    const fetchPosts = async() => {
     const res = await Axios.get(' https://newsapi.org/v2/top-headlines?country=us&apiKey=e9c7984a93e941e19db81ffd6148bee9')
     
@@ -39,7 +39,7 @@ function AppTemp2() {
     setPosts(res.data.articles)
     console.log('response frpm usestate post:',posts)
    }
-
+    */
   const deletePost = (id) =>{
     setPosts(posts.filter(detail => detail.id!==id ))
   }

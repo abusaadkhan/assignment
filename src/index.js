@@ -9,7 +9,7 @@ import AppTemp2 from './AppTemp2';
 
 ReactDOM.render(
   <React.StrictMode>
-    <AppTemp2/>
+    <AppTemp/>
   </React.StrictMode>,
   document.getElementById('root')
 );
